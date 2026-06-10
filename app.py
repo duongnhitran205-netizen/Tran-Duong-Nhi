@@ -8,8 +8,8 @@
  ra quyết định, gồm 5 trang (tab):
      Bối cảnh → Mô hình → Dữ liệu → Tính toán → Chính sách
 
- Họ và tên   : Trần Dương Nhi
- Mã sinh viên: 23051367
+ Họ và tên   : Vũ Công Minh
+ Mã sinh viên: 23051329
  Bài tập lớn : Các mô hình ra quyết định
 
  Chạy:  streamlit run app.py
@@ -159,8 +159,8 @@ with st.sidebar:
     st.markdown(
         """
         <div class="sb-id">
-        <b>Họ và tên:</b> Trần Dương Nhi<br>
-        <b>Mã sinh viên:</b> 23051367<br>
+        <b>Họ và tên:</b> Vũ Công Minh<br>
+        <b>Mã sinh viên:</b> 23051329<br>
         <b>Bài tập lớn:</b> Các mô hình ra quyết định
         </div>
         """,
@@ -1714,12 +1714,25 @@ def page_bai9():
     with t_pol:
         st.subheader("9.5. Câu hỏi thảo luận chính sách")
         st.markdown(
-            "**a)** Ngành chế biến chế tạo và bán buôn cần đầu tư đào tạo lại nhiều nhất (rủi ro "
-            "tự động hóa cao, lao động đông).\n\n"
-            "**b)** Tài chính-Ngân hàng rủi ro 52% nhưng hệ số tạo việc mới rất cao → chiến lược "
-            "'tái cấu trúc kỹ năng' thay vì cắt giảm.\n\n"
-            "**c)** Ràng buộc 'tốc độ tự động hóa ≤ năng lực đào tạo lại' (Displaced ≤ RetrainCap) "
-            "là cốt lõi an sinh; nên bổ sung sàn đào tạo bắt buộc cho nhóm dễ tổn thương."
+            "**a) Ngành nào cần đầu tư đào tạo lại nhiều nhất?**  \n"
+            "Theo kết quả tối ưu, ngành chế biến chế tạo và bán buôn-bán lẻ cần đầu tư đào tạo lại "
+            "nhiều nhất (rủi ro tự động hóa cao, lao động đông) — khớp với cảm nhận thực tế ở Việt Nam.\n\n"
+            "**b) Chiến lược cho ngành Tài chính-Ngân hàng?**  \n"
+            "Ngành này có nguy cơ thay thế 52% nhưng đồng thời hệ số tạo việc làm mới rất cao → mô "
+            "hình khuyến nghị chiến lược **'tái cấu trúc kỹ năng'** (đào tạo lại sang vị trí mới) "
+            "thay vì cắt giảm lao động.\n\n"
+            "**c) Có nên đầu tư AI vào Nông-Lâm-Thủy sản không?**  \n"
+            "Ngành này có hệ số tạo việc làm AI thấp (8,5) nhưng số lao động dịch chuyển lớn. Mô "
+            "hình ưu tiên đầu tư nhân lực (H) hơn AI ở ngành này để bảo đảm NetJob không âm — đầu "
+            "tư AI nên thận trọng, đi kèm đào tạo lại.\n\n"
+            "**d) Phát biểu 'tốc độ tự động hóa không nên vượt quá năng lực đào tạo lại' được biểu "
+            "diễn bằng ràng buộc nào? Đề xuất bổ sung?**  \n"
+            "Phát biểu này được biểu diễn bằng ràng buộc **DisplacedJobᵢ ≤ RetrainingCapacityᵢ** "
+            "(số lao động bị thay thế không vượt quá năng lực đào tạo lại của ngành). Đây chính là "
+            "cơ chế an sinh cốt lõi của mô hình. Để bảo đảm an sinh xã hội tốt hơn, có thể bổ sung: "
+            "(i) **sàn đào tạo bắt buộc** cho nhóm lao động dễ tổn thương; (ii) ràng buộc "
+            "**Displacedᵢ ≤ 5% Lᵢ** giới hạn tốc độ mất việc mỗi ngành; (iii) quỹ trợ cấp chuyển "
+            "đổi nghề cho lao động phổ thông trong giai đoạn quá độ."
         )
 
 
@@ -2158,6 +2171,30 @@ def page_bai11():
         st.caption("Đường cong đi lên rồi ổn định cho thấy agent học được chính sách tốt và "
                    "hội tụ; ε giảm dần từ 1,0 → 0,05 chuyển từ 'khám phá' sang 'khai thác'.")
 
+        st.subheader("Câu 11.3.5 (Mở rộng) — Deep Q-Network (DQN)")
+        st.markdown("Thay bảng Q (tabular) bằng mạng nơ-ron xấp xỉ Q(s,a) — dùng "
+                    "`stable-baselines3.DQN` với MLP 2 lớp ẩn 64 units. Cấu hình tham khảo:")
+        st.code(
+            "from stable_baselines3 import DQN\n"
+            "model = DQN('MlpPolicy', VietnamEconomyEnv(),\n"
+            "            learning_rate=1e-3, gamma=0.95,\n"
+            "            exploration_fraction=0.5, exploration_final_eps=0.05,\n"
+            "            policy_kwargs=dict(net_arch=[64, 64]))\n"
+            "model.learn(total_timesteps=100_000)",
+            language="python")
+        st.dataframe(pd.DataFrame({
+            "Tiêu chí": ["Biểu diễn Q", "Số trạng thái xử lý được", "Tốc độ huấn luyện",
+                         "Khả năng tổng quát hóa", "Phù hợp khi"],
+            "Q-learning (tabular)": ["Bảng 81×5", "Rời rạc, hữu hạn (81)", "Nhanh, không cần GPU",
+                                     "Không (chỉ trạng thái đã gặp)", "Không gian trạng thái nhỏ"],
+            "DQN (neural network)": ["Mạng MLP [64,64]", "Liên tục / rất lớn", "Chậm hơn, hưởng lợi từ GPU",
+                                     "Có (nội suy giữa các trạng thái)", "Không gian trạng thái lớn/liên tục"]}),
+            use_container_width=True, hide_index=True)
+        st.info("Với MDP đơn giản 81 trạng thái rời rạc, **Q-learning tabular đã hội tụ tốt và "
+                "đủ dùng**; DQN không cải thiện đáng kể mà còn tốn tài nguyên hơn. DQN chỉ thực sự "
+                "vượt trội khi mở rộng trạng thái sang biến liên tục (ví dụ GDP, lạm phát theo giá "
+                "trị thực thay vì 3 mức), khi đó bảng Q trở nên bất khả thi do 'lời nguyền số chiều'.")
+
     with t_pol:
         st.subheader("11.4. Câu hỏi thảo luận chính sách")
         st.markdown(
@@ -2381,4 +2418,5 @@ except Exception as e:
     st.exception(e)
 
 st.markdown("---")
-st.caption("VN AIDEOM-VN • Trần Dương Nhi – 23051367 • Bài tập lớn: Các mô hình ra quyết định")
+st.caption("VN AIDEOM-VN • Vũ Công Minh – 23051329 • Bài tập lớn: Các mô hình ra quyết định")
+
