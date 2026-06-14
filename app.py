@@ -8,7 +8,7 @@
  ra quyết định, gồm 5 trang (tab):
      Bối cảnh → Mô hình → Dữ liệu → Tính toán → Chính sách
 
- Họ và tên   : Vũ Công Minh
+ Họ và tên   : Trần Dương Nhi
  Mã sinh viên: 23051329
  Bài tập lớn : Các mô hình ra quyết định
 
